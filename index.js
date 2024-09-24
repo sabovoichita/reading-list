@@ -1,4 +1,4 @@
-const formSelector = "#booksForm";
+let allBooks = [];
 
 function $(selector) {
   return document.querySelector(selector);
@@ -61,47 +61,87 @@ function addNewBook(event) {
 
   const { noInput, nameInput, authorInput, pagesInput } = getInputsValues();
 
-  const newBook = document.createElement("tr");
-  newBook.innerHTML = `
-    <td>${noInput}</td>
-    <td>${nameInput}</td>
-    <td>${authorInput}</td>
-    <td>${pagesInput}</td>
-    <td><span class="tick">&#10004;</span></td>
-    <td>
-      <button type="button" class="editBtn">🖌</button>
-      <button type="button" class="deleteBtn">❌</button>
-    </td>
-  `;
+  const newBook = {
+    number: noInput,
+    name: nameInput,
+    author: authorInput,
+    pages: pagesInput,
+  };
 
-  $("#booksBody").appendChild(newBook);
+  allBooks.push(newBook);
 
-  $(`${formSelector}`).reset();
+  updateLocalStorage();
 
-  newBook.querySelector(".deleteBtn").addEventListener("click", deleteBook);
-  newBook.querySelector(".editBtn").addEventListener("click", editBook);
+  renderBooks();
+
+  $("#booksForm").reset();
+}
+
+function renderBooks() {
+  const booksBody = $("#booksBody");
+  booksBody.innerHTML = "";
+
+  allBooks.forEach((book, index) => {
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
+      <td>${book.number}</td>
+      <td>${book.name}</td>
+      <td>${book.author}</td>
+      <td>${book.pages}</td>
+      <td><span class="tick">&#10004;</span></td>
+      <td>
+        <button type="button" class="editBtn" data-index="${index}">🖌</button>
+        <button type="button" class="deleteBtn" data-index="${index}">❌</button>
+      </td>
+    `;
+
+    booksBody.appendChild(newRow);
+  });
+
+  document
+    .querySelectorAll(".deleteBtn")
+    .forEach((button) => button.addEventListener("click", deleteBook));
+  document
+    .querySelectorAll(".editBtn")
+    .forEach((button) => button.addEventListener("click", editBook));
 }
 
 function deleteBook(event) {
-  const row = event.target.closest("tr");
-  row.remove();
+  const index = event.target.dataset.index;
+  allBooks.splice(index, 1);
+  updateLocalStorage();
+  renderBooks();
 }
 
 function editBook(event) {
-  const row = event.target.closest("tr");
-  const cells = row.querySelectorAll("td");
+  const index = event.target.dataset.index;
+  const book = allBooks[index];
 
-  $("#numberInput").value = cells[0].textContent;
-  $("#nameInput").value = cells[1].textContent;
-  $("#authorInput").value = cells[2].textContent;
-  $("#pagesInput").value = cells[3].textContent;
+  $("#numberInput").value = book.number;
+  $("#nameInput").value = book.name;
+  $("#authorInput").value = book.author;
+  $("#pagesInput").value = book.pages;
+}
+
+function updateLocalStorage() {
+  localStorage.setItem("books", JSON.stringify(allBooks));
+}
+
+function loadBooksFromLocalStorage() {
+  const storedBooks = localStorage.getItem("books");
+  if (storedBooks) {
+    allBooks = JSON.parse(storedBooks);
+    renderBooks();
+  }
 }
 
 function initEvents() {
   $("body").innerHTML = createStructure() + createTable();
 
-  const form = $(formSelector);
+  const form = $("#booksForm");
   form.addEventListener("submit", addNewBook);
+
+  loadBooksFromLocalStorage();
 }
 
 initEvents();
