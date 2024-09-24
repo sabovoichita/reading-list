@@ -30,7 +30,7 @@ function createTable() {
       </tbody>
       <tfoot>
         <tr>
-          <td><input type="text" id="autoNumber" disabled value="Auto" /></td>
+          <td><input type="text" name="number" id="autoNumber" disabled value="Auto" /></td>
           <td><input type="text" name="name" id="nameInput" required/></td>
           <td><input type="text" name="author" id="authorInput" required/></td>
           <td><input type="number" name="pages" id="pagesInput" required /></td>
@@ -89,7 +89,7 @@ function renderBooks() {
       <td><span class="tick">&#10004;</span></td>
       <td>
         <button type="button" class="editBtn" data-index="${index}">🖌</button>
-        <button type="button" class="deleteBtn" data-index="${index}">❌</button>
+        <button type="button" class="deleteBtn" data-index="${index}">✖</button>
       </td>
     `;
 

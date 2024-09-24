@@ -1,44 +1,212 @@
-html {
+html,
+body {
   margin: 0;
   padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
 }
+
 h1 {
-  color: black;
+  color: #444;
   text-align: center;
+  margin-top: 20px;
+  font-size: 2rem;
+  font-weight: 600;
 }
+
 #booksTable {
-  border: 2px solid black;
+  width: 80%;
+  margin: 30px auto;
   border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 #booksTable thead th {
-  padding: 10px;
-  color: rgb(119, 19, 19);
-  border: 2px solid black;
-  background-color: rgb(248, 240, 240);
+  padding: 15px;
+  background-color: #fafafa;
+  color: #555;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
 }
+
 #booksTable tbody td {
-  padding: 10px;
-  border: 2px solid black;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
 }
+
 #booksTable tfoot td {
   padding: 10px;
-  border: 2px solid black;
+  border-top: 2px solid #ddd;
 }
+
 #booksTable td:nth-child(1),
 #booksTable th:nth-child(1) {
-  max-width: 30px;
+  width: 40px;
+  text-align: center;
 }
+
 #booksTable td:nth-child(4),
 #booksTable th:nth-child(4) {
-  max-width: 50px;
+  width: 60px;
+  text-align: center;
 }
 #booksTable input[name="number"] {
   display: none;
 }
-#booksTable input[name="author"],
-#booksTable input[name="name"] {
+#booksTable input[type="text"],
+#booksTable input[type="number"] {
   width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
 }
-#booksTable input[name="pages"] {
-  width: 50px;
+
+#booksTable input[type="text"]:focus,
+#booksTable input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+#booksTable button {
+  padding: 6px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#booksTable button:hover {
+  background-color: #0056b3;
+}
+
+#booksTable .editBtn {
+  background-color: #ffc107;
+}
+
+#booksTable .editBtn:hover {
+  background-color: #e0a800;
+}
+
+#booksTable .deleteBtn {
+  background-color: #dc3545;
+}
+
+#booksTable .deleteBtn:hover {
+  background-color: #c82333;
+}
+
+.tick {
+  color: #28a745;
+  font-size: 1.2rem;
+}
+
+/* Input row design */
+#booksTable tfoot input {
+  font-size: 0.85rem;
+  padding: 10px;
+  margin: 0;
+}
+
+#autoNumber {
+  text-align: center;
+  background-color: #e9ecef;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+/* Add row button */
+#booksTable tfoot button {
+  width: 100%;
+  font-size: 1rem;
+  padding: 8px;
+  background-color: #28a745;
+}
+
+#booksTable tfoot button:hover {
+  background-color: #218838;
+}
+
+/* Responsive Design for Smaller Screens */
+@media screen and (max-width: 768px) {
+  #booksTable {
+    width: 100%;
+    margin: 20px auto;
+  }
+
+  #booksTable thead th {
+    font-size: 0.8rem;
+    padding: 10px;
+  }
+
+  #booksTable tbody td {
+    font-size: 0.8rem;
+    padding: 10px;
+  }
+
+  #booksTable tfoot td {
+    padding: 8px;
+  }
+
+  #booksTable button {
+    padding: 5px 8px;
+    font-size: 0.85rem;
+  }
+
+  #booksTable tfoot button {
+    font-size: 0.9rem;
+    padding: 7px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+    margin-top: 15px;
+  }
+
+  #booksTable thead th,
+  #booksTable tbody td {
+    padding: 8px;
+    font-size: 0.75rem;
+  }
+
+  #booksTable button {
+    padding: 5px 6px;
+    font-size: 0.8rem;
+  }
+
+  #booksTable tfoot button {
+    padding: 6px;
+    font-size: 0.85rem;
+  }
+
+  #booksTable input[type="text"],
+  #booksTable input[type="number"] {
+    padding: 6px;
+    font-size: 0.8rem;
+  }
+
+  #booksTable td:nth-child(1),
+  #booksTable th:nth-child(1) {
+    width: 30px;
+  }
+
+  #booksTable td:nth-child(4),
+  #booksTable th:nth-child(4) {
+    width: 50px;
+  }
+
+  #booksTable {
+    width: 100%;
+  }
 }
