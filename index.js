@@ -1,4 +1,5 @@
 let allBooks = [];
+let editIndex = null;
 
 function $(selector) {
   return document.querySelector(selector);
@@ -59,17 +60,26 @@ function addNewBook(event) {
 
   const { nameInput, authorInput, pagesInput } = getInputsValues();
 
-  const newBook = {
-    number: allBooks.length > 0 ? allBooks.length + 1 : 1,
-    name: nameInput,
-    author: authorInput,
-    pages: pagesInput,
-  };
+  if (editIndex !== null) {
+    allBooks[editIndex] = {
+      ...allBooks[editIndex],
+      name: nameInput,
+      author: authorInput,
+      pages: pagesInput,
+    };
+    editIndex = null;
+  } else {
+    const newBook = {
+      number: allBooks.length > 0 ? allBooks.length + 1 : 1,
+      name: nameInput,
+      author: authorInput,
+      pages: pagesInput,
+    };
 
-  allBooks.push(newBook);
+    allBooks.push(newBook);
+  }
 
   updateLocalStorage();
-  sortBooks();
   renderBooks();
 
   $("#booksForm").reset();
@@ -89,7 +99,7 @@ function renderBooks() {
       <td><span class="tick">&#10004;</span></td>
       <td>
         <button type="button" class="editBtn" data-index="${index}">🖌</button>
-        <button type="button" class="deleteBtn" data-index="${index}">✖</button>
+        <button type="button" class="deleteBtn" data-index="${index}">❌</button>
       </td>
     `;
 
@@ -113,8 +123,8 @@ function deleteBook(event) {
 }
 
 function editBook(event) {
-  const index = event.target.dataset.index;
-  const book = allBooks[index];
+  editIndex = event.target.dataset.index;
+  const book = allBooks[editIndex];
 
   $("#nameInput").value = book.name;
   $("#authorInput").value = book.author;
@@ -131,10 +141,6 @@ function loadBooksFromLocalStorage() {
     allBooks = JSON.parse(storedBooks);
     renderBooks();
   }
-}
-
-function sortBooks() {
-  allBooks.sort((a, b) => a.number - b.number);
 }
 
 function reassignNumbers() {
