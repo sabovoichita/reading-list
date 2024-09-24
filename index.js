@@ -1,5 +1,4 @@
 let allBooks = [];
-let editIndex = null;
 
 function $(selector) {
   return document.querySelector(selector);
@@ -31,7 +30,7 @@ function createTable() {
       </tbody>
       <tfoot>
         <tr>
-          <td><input type="text" name="number" "id="autoNumber" disabled value="" /></td>
+          <td><input type="text" id="autoNumber" disabled value="Auto" /></td>
           <td><input type="text" name="name" id="nameInput" required/></td>
           <td><input type="text" name="author" id="authorInput" required/></td>
           <td><input type="number" name="pages" id="pagesInput" required /></td>
@@ -55,47 +54,25 @@ function getInputsValues() {
   };
 }
 
-function getNextAvailableNumber() {
-  if (allBooks.length === 0) {
-    return 1;
-  }
-
-  const existingNumbers = allBooks.map((book) => Number(book.number));
-
-  let nextNumber = 1;
-  while (existingNumbers.includes(nextNumber)) {
-    nextNumber++;
-  }
-
-  return nextNumber;
-}
-
-function addOrUpdateBook(event) {
+function addNewBook(event) {
   event.preventDefault();
 
   const { nameInput, authorInput, pagesInput } = getInputsValues();
 
-  const bookNumber =
-    editIndex !== null ? allBooks[editIndex].number : getNextAvailableNumber();
-
   const newBook = {
-    number: bookNumber,
+    number: allBooks.length > 0 ? allBooks.length + 1 : 1,
     name: nameInput,
     author: authorInput,
     pages: pagesInput,
   };
 
-  if (editIndex !== null) {
-    allBooks[editIndex] = newBook;
-    editIndex = null;
-  } else {
-    allBooks.push(newBook);
-  }
+  allBooks.push(newBook);
 
   updateLocalStorage();
+  sortBooks();
   renderBooks();
+
   $("#booksForm").reset();
-  $("#autoNumber").value = "Auto";
 }
 
 function renderBooks() {
@@ -131,6 +108,7 @@ function deleteBook(event) {
   const index = event.target.dataset.index;
   allBooks.splice(index, 1);
   updateLocalStorage();
+  reassignNumbers();
   renderBooks();
 }
 
@@ -141,9 +119,6 @@ function editBook(event) {
   $("#nameInput").value = book.name;
   $("#authorInput").value = book.author;
   $("#pagesInput").value = book.pages;
-  $("#autoNumber").value = book.number;
-
-  editIndex = index;
 }
 
 function updateLocalStorage() {
@@ -158,12 +133,24 @@ function loadBooksFromLocalStorage() {
   }
 }
 
+function sortBooks() {
+  allBooks.sort((a, b) => a.number - b.number);
+}
+
+function reassignNumbers() {
+  allBooks.forEach((book, index) => {
+    book.number = index + 1;
+  });
+  updateLocalStorage();
+}
+
 function initEvents() {
   $("body").innerHTML = createStructure() + createTable();
 
   const form = $("#booksForm");
-  form.addEventListener("submit", addOrUpdateBook);
+  form.addEventListener("submit", addNewBook);
 
   loadBooksFromLocalStorage();
 }
+
 initEvents();
