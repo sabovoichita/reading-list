@@ -1,3 +1,6 @@
+function $(selector) {
+  return document.querySelector(selector);
+}
 function createStructure() {
   return `
   <header>
@@ -27,25 +30,38 @@ function createTable() {
             <span class="tick">&#10004;</span>
           </td>
           <td>
-            <span class="edit">🖌</span>
-            <span class="delete">❌</span>
+           <button type="submit">🖌</button>
+           <button type="reset">❌</button>
           </td>
         </tr>
       </tbody>
       <tr>
-        <td><input type="number" name="" id="numberInput" /></td>
-        <td><input type="text" name="" id="nameInput" /></td>
-        <td><input type="text" name="" id="authorInput" /></td>
-        <td><input type="number" name="" id="pagesInput" /></td>
+        <td><input type="number" name="" id="numberInput" required/></td>
+        <td><input type="text" name="" id="nameInput"  required/></td>
+        <td><input type="text" name="" id="authorInput"  required/></td>
+        <td><input type="number" name="" id="pagesInput"  required /></td>
         <td></td>
-        <td></td>
+        <td><button id="add">Add</button></td>
       </tr>
     </table>`;
 }
+function getInputsValues() {
+  console.log("getting values");
+  const noInput = $("#numberInput").value;
+  const nameInput = $("#nameInput").value;
+  const authorInput = $("#authorInput").value;
+  const pagesInput = $("#pagesInput").value;
+  console.log("Number value is", noInput);
+  console.log("Name value is", nameInput);
+  console.log("Author value is", authorInput);
+  console.log("Pages value is", pagesInput);
+}
 
 function initEvents() {
-  document.querySelector("body").innerHTML = createStructure() + createTable();
+  $("body").innerHTML = createStructure() + createTable();
   console.log("creating structure");
+  const button = $("#add");
+  button.addEventListener("click", getInputsValues);
 }
 
 initEvents();
