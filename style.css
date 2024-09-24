@@ -2,7 +2,6 @@ html {
   margin: 0;
   padding: 0;
 }
-
 h1 {
   color: black;
   text-align: center;
@@ -20,4 +19,26 @@ h1 {
 #booksTable tbody td {
   padding: 10px;
   border: 2px solid black;
+}
+#booksTable tfoot td {
+  padding: 10px;
+  border: 2px solid black;
+}
+#booksTable td:nth-child(1),
+#booksTable th:nth-child(1) {
+  max-width: 30px;
+}
+#booksTable td:nth-child(4),
+#booksTable th:nth-child(4) {
+  max-width: 50px;
+}
+#booksTable input[name="number"] {
+  display: none;
+}
+#booksTable input[name="author"],
+#booksTable input[name="name"] {
+  width: 100%;
+}
+#booksTable input[name="pages"] {
+  width: 50px;
 }

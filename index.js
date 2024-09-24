@@ -1,4 +1,5 @@
 let allBooks = [];
+let editIndex = null;
 
 function $(selector) {
   return document.querySelector(selector);
@@ -26,11 +27,11 @@ function createTable() {
         </tr>
       </thead>
       <tbody id="booksBody">
-        <!-- Rows will be dynamically added here -->
+        <!-- Books will be dynamically added here -->
       </tbody>
       <tfoot>
         <tr>
-          <td><input type="number" name="number" id="numberInput" required/></td>
+          <td><input type="text" name="number" "id="autoNumber" disabled value="" /></td>
           <td><input type="text" name="name" id="nameInput" required/></td>
           <td><input type="text" name="author" id="authorInput" required/></td>
           <td><input type="number" name="pages" id="pagesInput" required /></td>
@@ -43,38 +44,58 @@ function createTable() {
 }
 
 function getInputsValues() {
-  const noInput = $("#numberInput").value;
   const nameInput = $("#nameInput").value;
   const authorInput = $("#authorInput").value;
   const pagesInput = $("#pagesInput").value;
 
   return {
-    noInput,
     nameInput,
     authorInput,
     pagesInput,
   };
 }
 
-function addNewBook(event) {
+function getNextAvailableNumber() {
+  if (allBooks.length === 0) {
+    return 1;
+  }
+
+  const existingNumbers = allBooks.map((book) => Number(book.number));
+
+  let nextNumber = 1;
+  while (existingNumbers.includes(nextNumber)) {
+    nextNumber++;
+  }
+
+  return nextNumber;
+}
+
+function addOrUpdateBook(event) {
   event.preventDefault();
 
-  const { noInput, nameInput, authorInput, pagesInput } = getInputsValues();
+  const { nameInput, authorInput, pagesInput } = getInputsValues();
+
+  const bookNumber =
+    editIndex !== null ? allBooks[editIndex].number : getNextAvailableNumber();
 
   const newBook = {
-    number: noInput,
+    number: bookNumber,
     name: nameInput,
     author: authorInput,
     pages: pagesInput,
   };
 
-  allBooks.push(newBook);
+  if (editIndex !== null) {
+    allBooks[editIndex] = newBook;
+    editIndex = null;
+  } else {
+    allBooks.push(newBook);
+  }
 
   updateLocalStorage();
-
   renderBooks();
-
   $("#booksForm").reset();
+  $("#autoNumber").value = "Auto";
 }
 
 function renderBooks() {
@@ -117,10 +138,12 @@ function editBook(event) {
   const index = event.target.dataset.index;
   const book = allBooks[index];
 
-  $("#numberInput").value = book.number;
   $("#nameInput").value = book.name;
   $("#authorInput").value = book.author;
   $("#pagesInput").value = book.pages;
+  $("#autoNumber").value = book.number;
+
+  editIndex = index;
 }
 
 function updateLocalStorage() {
@@ -139,9 +162,8 @@ function initEvents() {
   $("body").innerHTML = createStructure() + createTable();
 
   const form = $("#booksForm");
-  form.addEventListener("submit", addNewBook);
+  form.addEventListener("submit", addOrUpdateBook);
 
   loadBooksFromLocalStorage();
 }
-
 initEvents();
